@@ -1,0 +1,14 @@
+module PG
+  module AzureWorkloadIdentity
+    # Contract that the prepend target (ActiveRecord::Tasks::PostgreSQLDatabaseTasks)
+    # must satisfy for ActiveRecordPostgreSQLDatabaseTasks to be valid.
+    interface _DatabaseTasksHost
+      def configuration_hash: () -> Hash[Symbol, untyped]
+      def psql_env: () -> Hash[String, String?]
+    end
+
+    module ActiveRecordPostgreSQLDatabaseTasks : _DatabaseTasksHost
+      private def psql_env: () -> Hash[String, String?]
+    end
+  end
+end

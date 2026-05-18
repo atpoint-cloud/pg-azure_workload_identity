@@ -1,0 +1,8 @@
+# The PG gem has no RBS signature, so we stub them here locally
+
+module PG
+  class Connection
+    def self.quote_connstr: (String) -> String
+    def self.conndefaults_hash: () -> Hash[String, String?]
+  end
+end

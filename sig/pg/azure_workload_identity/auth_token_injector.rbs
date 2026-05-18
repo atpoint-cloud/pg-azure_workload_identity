@@ -1,0 +1,24 @@
+module PG
+  module AzureWorkloadIdentity
+    class AuthTokenInjector
+      interface _HasAzureWorkloadIdentity
+        def azure_workload_identity: () -> boolish
+      end
+
+      # Helper interface for ENV-like hashes
+      interface _ENVHash
+        def []: (String name) -> String?
+        def []=: (String name, String? value) -> String?
+      end
+
+      def initialize: (?auth_token_generator: AuthTokenGenerator?) -> void
+      def inject_into_connection_string: (String) -> String
+      def inject_into_psql_env!: (Hash[Symbol, untyped], _ENVHash) -> void
+
+      private
+
+      def generate_auth_token?: (_HasAzureWorkloadIdentity) -> boolish
+      def auth_token_generator: () -> AuthTokenGenerator
+    end
+  end
+end
