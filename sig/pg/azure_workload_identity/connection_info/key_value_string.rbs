@@ -1,0 +1,32 @@
+module PG
+  module AzureWorkloadIdentity
+    module ConnectionInfo
+      class KeyValueString
+        attr_reader azure_workload_identity : boolish
+
+        def initialize: (String) -> void
+
+        def user: () -> String?
+        def host: () -> String?
+        def port: () -> (Integer | String | nil)
+        def password=: (String) -> String
+        def to_s: () -> String
+        def to_h: () -> Hash[Symbol, String]
+
+        class Parser
+          def initialize: (String) -> void
+          def parse: () -> Hash[Symbol, String]
+
+          private
+
+          def skip_whitespace: () -> void
+          def parse_key: () -> Symbol
+          def assert_followed_by_equals_sign: (Symbol) -> void
+          def parse_value: () -> String
+          def parse_quoted_value: () -> String
+          def parse_unquoted_value: () -> String
+        end
+      end
+    end
+  end
+end

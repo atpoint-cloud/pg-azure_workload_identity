@@ -1,0 +1,49 @@
+name: Release
+on:
+  push:
+    tags:
+      - v*
+defaults:
+  run:
+    shell: bash
+permissions: {}
+jobs:
+  release:
+    name: Push gem to RubyGems
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: write
+    steps:
+      - name: Check out source code
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Install Ruby and gems
+        uses: ruby/setup-ruby@97ecb7b512899eb71ab1bf2310a624c6f1589ac6 # v1.308.0
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+
+      - name: Generate release notes
+        run: bin/rake release:notes
+
+      - uses: rubygems/release-gem@6317d8d1f7e28c24d28f6eff169ea854948bd9f7 # v1.2.0
+        with:
+          setup-trusted-publisher: true
+          attestations: true
+          await-release: true
+
+      - name: Publish release to GitHub
+        run: |-
+          version=$(< pkg/version.txt)
+          gh release create \
+            "v${version}" \
+            "pkg/pg-azure_workload_identity-${version}.gem" \
+            "pkg/pg-azure_workload_identity-${version}.gem.sigstore.json" \
+            --notes-file pkg/release.md \
+            --repo "${GITHUB_REPOSITORY}" \
+            --verify-tag
+        env:
+          GH_TOKEN: ${{ github.token }}

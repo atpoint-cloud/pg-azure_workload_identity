@@ -1,0 +1,37 @@
+module PG
+  module AzureWorkloadIdentity
+    class AuthTokenGenerator
+      IDENTITY_ENDPOINT: String
+      SCOPE: String
+      GRANT_TYPE: String
+      CLIENT_ASSERTION_TYPE: String
+
+      attr_reader identity_endpoint: ::URI::HTTP
+      attr_reader client_id: String
+      attr_reader scope: String
+      attr_reader grant_type: String
+      attr_reader client_assertion_type: String
+      attr_reader federated_token_file: String
+
+      def self.default: () -> AuthTokenGenerator
+
+      def initialize: (
+        identity_endpoint: String,
+        client_id: String,
+        scope: String,
+        grant_type: String,
+        client_assertion_type: String,
+        federated_token_file: String
+      ) -> void
+
+      def call : () -> String
+
+      private
+
+      def refresh: () -> AuthToken
+      def request_token: () -> Net::HTTPResponse
+      def build_request: () -> Net::HTTP::Post
+      def read_federated_token: () -> String
+    end
+  end
+end

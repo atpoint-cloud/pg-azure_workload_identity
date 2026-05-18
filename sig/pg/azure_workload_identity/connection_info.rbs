@@ -1,0 +1,8 @@
+module PG
+  module AzureWorkloadIdentity
+    module ConnectionInfo
+      def self.from_connection_string: (String) -> (URI | KeyValueString)
+      def self.from_active_record_configuration_hash: (Hash[Symbol, untyped]) -> ActiveRecordConfigurationHash
+    end
+  end
+end

@@ -1,0 +1,13 @@
+module PG
+  module AzureWorkloadIdentity
+    module Connection
+      def conndefaults: () -> Array[Hash[Symbol, untyped]]
+      def conninfo_parse: (String) -> Array[Hash[Symbol, untyped]]
+      def parse_connect_args: (untyped) -> String
+
+      private
+
+      def conndefault_azure_workload_identity: () -> Hash[Symbol, untyped]
+    end
+  end
+end
