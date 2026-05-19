@@ -1,0 +1,15 @@
+module PG
+  module AzureWorkloadIdentity
+    module ConnectionInfo
+      class ActiveRecordConfigurationHash
+
+        def initialize: (Hash[Symbol, untyped]) -> void
+
+        def azure_workload_identity: () -> boolish
+        def user: () -> String?
+        def host: () -> String?
+        def port: () -> (Integer | String | nil)
+      end
+    end
+  end
+end

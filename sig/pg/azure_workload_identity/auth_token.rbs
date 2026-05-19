@@ -1,0 +1,23 @@
+module PG
+  module AzureWorkloadIdentity
+    class AuthToken
+      REFRESH_THRESHOLD_SECONDS: Integer
+
+      attr_reader access_token: String
+
+      def self.from_json: (String) -> AuthToken
+
+      def initialize: (
+        access_token: String,
+        expires_in: Integer,
+        ?refresh_threshold: Integer
+      ) -> void
+
+      def valid?: () -> bool
+
+      private
+
+      def now: () -> Float
+    end
+  end
+end

@@ -1,0 +1,18 @@
+module PG
+  module AzureWorkloadIdentity
+    # Contract that the prepend target (ActiveRecord::ConnectionAdapters::PostgreSQLAdapter)
+    # must satisfy for ActiveRecordPostgreSQLAdapter to be valid.
+
+    interface _DatabaseConfig
+      def configuration_hash: () -> Hash[Symbol, untyped]
+    end
+
+    interface _PostgreSQLAdapterHost
+      def dbconsole: (_DatabaseConfig, Hash[Symbol, untyped]) -> untyped
+    end
+
+    module ActiveRecordPostgreSQLAdapter : _PostgreSQLAdapterHost
+      def dbconsole: (_DatabaseConfig, Hash[Symbol, untyped]) -> untyped
+    end
+  end
+end

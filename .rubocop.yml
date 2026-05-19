@@ -1,0 +1,23 @@
+plugins:
+  - rubocop-minitest
+  - rubocop-rake
+
+AllCops:
+  TargetRubyVersion: 3.3
+  NewCops: enable
+  Exclude:
+    - bin/**/*
+    - vendor/**/*
+
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+
+Style/StringLiteralsInInterpolation:
+  EnforcedStyle: double_quotes
+
+Naming/PredicateMethod:
+  Enabled: false
+
+Metrics:
+  Exclude:
+    - test/**/*

@@ -1,0 +1,34 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "json"
+
+def minor_versions(name, requirement)
+  tuples, _errors = Gem::SpecFetcher.fetcher.search_for_dependency(Gem::Dependency.new(name, requirement))
+  tuples.map { |tuple, _source| tuple.version.segments.first(2).join(".") }.uniq
+end
+
+gemspec = Gem::Specification.load(File.expand_path("../pg-azure_workload_identity.gemspec", __dir__))
+
+ruby_versions = ["3.3", "3.4", "4.0"]
+activerecord_requirement = ">= 7.2"
+pg_requirement = gemspec.dependencies.find { |dependency| dependency.name == "pg" }.requirement
+
+versions = ruby_versions.flat_map do |ruby_version|
+  minor_versions("activerecord", activerecord_requirement).flat_map do |activerecord_version|
+    minor_versions("pg", pg_requirement).map do |pg_version|
+      {
+        ruby: ruby_version,
+        activerecord: activerecord_version,
+        pg: pg_version
+      }
+    end
+  end
+end
+
+matrix = { include: versions }
+
+puts JSON.pretty_generate(matrix)
+
+output_file = ENV.fetch("GITHUB_OUTPUT", false)
+File.write output_file, "matrix=#{matrix.to_json}" if output_file

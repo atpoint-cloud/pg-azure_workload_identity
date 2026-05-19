@@ -1,0 +1,11 @@
+module PG
+  module AzureWorkloadIdentity
+    VERSION: String
+    # See the writing guide of rbs: https://github.com/ruby/rbs#guides
+
+    @auth_token_generator: AuthTokenGenerator
+
+    def self.auth_token_generator: () -> AuthTokenGenerator
+    def self.auth_token_generator=: (AuthTokenGenerator) -> AuthTokenGenerator
+  end
+end

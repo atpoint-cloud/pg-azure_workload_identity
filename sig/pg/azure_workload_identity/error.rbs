@@ -1,0 +1,6 @@
+module PG
+  module AzureWorkloadIdentity
+    class Error < StandardError
+    end
+  end
+end

@@ -1,0 +1,19 @@
+module PG
+  module AzureWorkloadIdentity
+    module ConnectionInfo
+      class URI
+        attr_reader azure_workload_identity : boolish
+
+        def self.matches?: (String) -> bool
+
+        def initialize: (String) -> void
+
+        def user: () -> String?
+        def host: () -> String?
+        def port: () -> (Integer | String | nil)
+        def password=: (String) -> String
+        def to_s: () -> String
+      end
+    end
+  end
+end
