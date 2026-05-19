@@ -21,11 +21,13 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Install Ruby and gems
+      - name: Install Ruby
         uses: ruby/setup-ruby@97ecb7b512899eb71ab1bf2310a624c6f1589ac6 # v1.308.0
         with:
           ruby-version: ${{ matrix.ruby }}
-          bundler-cache: true
+
+      - name: Install gems
+        run: bundle install --jobs 2
 
       - name: Generate release notes
         run: bin/rake release:notes
