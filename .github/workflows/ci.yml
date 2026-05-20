@@ -81,7 +81,7 @@ jobs:
       PG_VERSION: ${{ matrix.pg }}
     services:
       postgres:
-        image: postgres:18
+        image: postgres:18@sha256:41da01536bc3ae26308cefb0c57235e7488001360bdb15191eb0b7955b570299
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
@@ -136,7 +136,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check test results
-        run: test "${{ needs.test.result }}" = "success"
+        env:
+          TEST_RESULT: ${{ needs.test.result }}
+        run: test "$TEST_RESULT" = "success"
 
       - name: Check out source code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
