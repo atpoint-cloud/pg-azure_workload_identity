@@ -9,6 +9,7 @@ gem "rake"
 
 group :development do
   gem "irb"
+  gem "overcommit", require: false
 end
 
 group :lint do
