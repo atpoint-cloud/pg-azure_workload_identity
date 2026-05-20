@@ -1,0 +1,22 @@
+PreCommit:
+  RuboCop:
+    enabled: true
+    on_warn: fail
+    command: ["bin/rubocop"]
+
+  BundleCheck:
+    enabled: true
+
+  TrailingWhitespace:
+    enabled: true
+
+  HardTabs:
+    enabled: true
+    exclude:
+      - "**/*.md"
+
+  YamlSyntax:
+    enabled: true
+
+  MergeConflicts:
+    enabled: true

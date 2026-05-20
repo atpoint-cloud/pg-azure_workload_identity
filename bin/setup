@@ -7,3 +7,5 @@ bundle install
 
 # Do any other automated setup that you need to do here
 bundle exec rbs collection update
+bundle exec overcommit --install
+bundle exec overcommit --sign
