@@ -6,6 +6,9 @@ on:
 defaults:
   run:
     shell: bash
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
 permissions: {}
 jobs:
   release:
@@ -13,8 +16,8 @@ jobs:
     runs-on: ubuntu-latest
     environment: rubygems
     permissions:
-      id-token: write
-      contents: write
+      id-token: write # OIDC token for RubyGems trusted publishing and Sigstore attestations
+      contents: write # publish the GitHub release via `gh release create`
     steps:
       - name: Check out source code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2

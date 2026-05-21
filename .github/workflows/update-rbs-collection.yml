@@ -1,0 +1,79 @@
+name: Update rbs_collection.lock.yaml
+
+on:
+  schedule:
+    - cron: '0 0 * * 2'
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: dependabot-rbs-collection-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  update-rbs-collection:
+    name: Update rbs_collection.lock.yaml
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # push the rbs-update branch with the regenerated lockfile
+      pull-requests: write # open the PR via `gh pr create`
+    env:
+      BUNDLE_ONLY: default lint
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Install Ruby and gems
+        uses: ruby/setup-ruby@97ecb7b512899eb71ab1bf2310a624c6f1589ac6 # v1.308.0
+        with:
+          bundler-cache: true
+
+      - name: Set up git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Switch branch
+        run: |
+          git switch -c rbs-update-$(date +'%Y%m%d')-$(uuidgen | cut -c1-8)
+
+      - name: Update rbs_collection.lock.yaml
+        run: |
+          bin/rbs collection update
+          git add rbs_collection.lock.yaml
+
+          if git diff --cached --exit-code; then
+            echo "No changes to commit, exiting."
+            exit 0
+          fi
+
+          git commit -m "chore: update rbs_collection.lock.yaml"
+          echo "has_update=true" >> $GITHUB_ENV
+
+      - name: Push branch
+        if: env.has_update == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh auth setup-git
+          git push --set-upstream origin HEAD
+
+      - name: Create Pull Request
+        if: env.has_update == 'true'
+        env:
+          BASE_BRANCH: ${{ github.ref_name }}
+          GH_TOKEN: ${{ github.token }}
+          PR_BODY: ${{ github.event_name == 'schedule' && 'Automated weekly rbs collection update' || format('Manual rbs collection update against `{0}`', github.ref_name) }}
+        run: |
+          gh pr create \
+            --title "chore: rbs collection update ($(date +'%Y-%m-%d'))" \
+            --body "$PR_BODY" \
+            --head "$(git rev-parse --abbrev-ref HEAD)" \
+            --base "$BASE_BRANCH"

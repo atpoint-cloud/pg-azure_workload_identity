@@ -9,13 +9,16 @@ on:
 defaults:
   run:
     shell: bash
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 permissions: {}
 jobs:
   zizmor:
     name: Audit GitHub Actions security
     runs-on: ubuntu-latest
     permissions:
-      security-events: write
+      security-events: write # upload zizmor SARIF findings to GitHub code scanning
     steps:
       - name: Check out code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
