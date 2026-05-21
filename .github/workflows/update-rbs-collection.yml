@@ -1,9 +1,6 @@
 name: Update rbs_collection.lock.yaml
 
 on:
-  push:
-    branches:
-      - chore/automatic-rbs-updates
   schedule:
     - cron: '0 0 * * 2'
   workflow_dispatch:
